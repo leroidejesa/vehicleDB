@@ -21,7 +21,12 @@ var vList = []vstruct.Vehicle{
 	},
 }
 
-// Retrieve returns a vehicle by stocknumber.
+// Add a new vehicle to the list
+func Add(newVehicle vstruct.Vehicle) {
+	vList = append(vList, newVehicle)
+}
+
+// Retrieve a vehicle by stocknumber.
 // Example output:
 // {2003 Nissan Frontier 1}
 func Retrieve(s int) vstruct.Vehicle {
