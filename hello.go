@@ -4,12 +4,10 @@ import (
 	"fmt"
 
 	"leroi-training/vehicles"
-	"leroi-training/vstruct"
 )
 
 func main() {
-	v := vstruct.Vehicle{Year: 2002, Make: "Toyota", Model: "Tacoma", Stocknumber: 1}
-	fmt.Printf("Hello, world! I drive a green %s!\n", v.Model)
-	vehicles.Add()
+	fmt.Printf("Hello, world!\n")
+	fmt.Println(vehicles.Retrieve(2))
 	vehicles.List()
 }
