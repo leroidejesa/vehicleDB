@@ -1,13 +1,23 @@
 package vehicles_test
 
 import (
-	"leroi-training/vehicles"
-	"testing"
+	"fmt"
+
+	"leroi-training/vstruct"
 )
 
-func TestStock(t *testing.T) {
-	v := vehicles.Vehicle{Year: 2002, Make: "Toyota", Model: "Tacoma", Stocknumber: 1}
-	if v.Stocknumber != 1 {
-		t.Error("Expected 1, got ", v.Stocknumber)
-	}
+var v []vstruct.Vehicle
+
+func ExampleAdd() {
+	v1 := vstruct.Vehicle{Year: 2003, Make: "Toyota", Model: "Tacoma", Stocknumber: 1}
+	v2 := vstruct.Vehicle{Year: 2002, Make: "Toyota", Model: "Tacoma", Stocknumber: 2}
+
+	v = append(v, v1)
+	fmt.Println(v)
+
+	v = append(v, v2)
+	fmt.Println(v)
+	// Output:
+	// [{2003 Toyota Tacoma 1}]
+	// [{2003 Toyota Tacoma 1} {2002 Toyota Tacoma 2}]
 }
