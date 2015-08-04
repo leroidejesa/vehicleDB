@@ -1,7 +1,13 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+
+	"leroi-training/vehicles"
+)
 
 func main() {
-  fmt.Printf("Hello, world!")
+	fmt.Printf("Hello, world!\n")
+	fmt.Println(vehicles.Retrieve(2))
+	vehicles.List()
 }
