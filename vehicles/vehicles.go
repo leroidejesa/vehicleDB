@@ -2,18 +2,23 @@ package vehicles
 
 import (
 	"fmt"
-
-	"leroi-training/vstruct"
 )
 
-var vList = []vstruct.Vehicle{
-	vstruct.Vehicle{
+type Vehicle struct {
+	Year        int
+	Make        string
+	Model       string
+	Stocknumber int
+}
+
+var vList = []Vehicle{
+	Vehicle{
 		Year:        2003,
 		Make:        "Nissan",
 		Model:       "Frontier",
 		Stocknumber: 1,
 	},
-	vstruct.Vehicle{
+	Vehicle{
 		Year:        2002,
 		Make:        "Toyota",
 		Model:       "Tacoma",
@@ -21,16 +26,16 @@ var vList = []vstruct.Vehicle{
 	},
 }
 
-// Add a new vehicle to the list
-func Add(newVehicle vstruct.Vehicle) {
+// Add a new Vehicle to the list
+func Add(newVehicle Vehicle) {
 	vList = append(vList, newVehicle)
 }
 
-// Retrieve a vehicle by stocknumber.
+// Retrieve a Vehicle by stocknumber.
 // Example output:
 // {2003 Nissan Frontier 1}
-func Retrieve(s int) vstruct.Vehicle {
-	var result vstruct.Vehicle
+func Retrieve(s int) Vehicle {
+	var result Vehicle
 	for _, vehicle := range vList {
 		if vehicle.Stocknumber == s {
 			result = vehicle
