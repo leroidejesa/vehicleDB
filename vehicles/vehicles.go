@@ -82,14 +82,17 @@ func Add(newVehicle Vehicle) {
 // Retrieve a Vehicle by stocknumber.
 // Example output:
 // {2003 Nissan Frontier 1}
-func Retrieve(s string) Vehicle {
+func Retrieve(s string) []Vehicle {
 	var result Vehicle
 	for _, vehicle := range Vlist {
 		if vehicle.Stocknumber == s {
 			result = vehicle
 		}
 	}
-	return result
+
+	var resultSlice []Vehicle
+	resultSlice = append(resultSlice, result)
+	return resultSlice
 }
 
 // List returns complete vehicle list.

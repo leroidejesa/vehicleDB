@@ -2,7 +2,10 @@ package main
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
+
+	"github.com/gorilla/mux"
 
 	"leroi-training/vehicles"
 )
@@ -16,11 +19,33 @@ func vehiclesHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	log.Println("Full Vehicle List Retrieved.")
 	w.Write(byte)
+}
+
+var stockpath string
+
+func vehicleStock(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
+	stock := r.URL.Path[1:]
+	stockresult, err := json.Marshal(vehicles.Retrieve(stock))
+
+	if err != nil {
+		return
+	}
+
+	log.Printf("Vehicle %s Successfully Retrieved.", stock)
+	w.Write(stockresult)
+	stockpath = stock
 }
 
 func main() {
 	vehicles.ImportPhotoData("$HOME/Documents/exercise/photos/")
-	http.HandleFunc("/", vehiclesHandler)
+	r := mux.NewRouter()
+	r.HandleFunc("/", vehiclesHandler)
+	r.HandleFunc("/{stockpath}", vehicleStock)
+	http.Handle("/", r)
+	http.Handle("/{stockpath}", r)
 	http.ListenAndServe(":8080", nil)
 }
