@@ -10,13 +10,13 @@ import (
 
 // Vehicle is a struct which will help us organize basic vehicle data
 type Vehicle struct {
-	Year        int
-	Make        string
-	Model       string
-	Stocknumber string
+	Year        int    `json:"year"`
+	Make        string `json:"make"`
+	Model       string `json:"model"`
+	Stocknumber string `json:"stocknumber"`
 }
 
-var vList = []Vehicle{
+var Vlist = []Vehicle{
 	Vehicle{
 		Year:        2003,
 		Make:        "Nissan",
@@ -76,7 +76,7 @@ func parseFiles() {
 
 // Add a new Vehicle to the list
 func Add(newVehicle Vehicle) {
-	vList = append(vList, newVehicle)
+	Vlist = append(Vlist, newVehicle)
 }
 
 // Retrieve a Vehicle by stocknumber.
@@ -84,7 +84,7 @@ func Add(newVehicle Vehicle) {
 // {2003 Nissan Frontier 1}
 func Retrieve(s string) Vehicle {
 	var result Vehicle
-	for _, vehicle := range vList {
+	for _, vehicle := range Vlist {
 		if vehicle.Stocknumber == s {
 			result = vehicle
 		}
@@ -95,7 +95,7 @@ func Retrieve(s string) Vehicle {
 // List returns complete vehicle list.
 func List() {
 	fmt.Println("Vehicle List:")
-	for _, vehicle := range vList {
+	for _, vehicle := range Vlist {
 		fmt.Println(vehicle)
 	}
 }
