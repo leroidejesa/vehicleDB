@@ -6,6 +6,8 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
+
+	"leroi-training/vehicledb"
 )
 
 // Vehicle is a struct which will help us organize basic vehicle data
@@ -35,7 +37,7 @@ var Vlist = []Vehicle{
 // Vslices holds pre-parsed slices of vehicle data
 var Vslices [][]string
 
-// push places photo files into a multidimensional slice (Vslices) for func parseFiles()
+// push places photo files into a multidimensional slice (Vslices) for func parseAndCache()
 func push(p []string) {
 	Vslices = append(Vslices, p)
 }
@@ -56,13 +58,13 @@ func ImportPhotoData(root string) {
 		numImported++
 		return nil
 	}
-	defer parseFiles()
+	defer parseAndCache()
 	filepath.Walk(dir, walkpath)
-	fmt.Printf("Imported %d Files\n", numImported)
+	fmt.Printf("Imported %d Files.\nNote: To insert imported data into local database, use vehicles.ImportToDb().\n", numImported)
 }
 
-// organizes import results and adds vehicles to memory in proper format.
-func parseFiles() {
+// parseAndCache() organizes import results and adds vehicles to memory in proper format.
+func parseAndCache() {
 	for _, file := range Vslices {
 		year, _ := strconv.Atoi(file[0])
 		make := file[1]
@@ -75,12 +77,33 @@ func parseFiles() {
 	}
 }
 
-// Add a new Vehicle to the list
+//make these two DRY!
+
+// ImportToDb is the next (optional) step after ImportPhotoData() that loads parsed files into database.
+func ImportToDb() {
+	for _, file := range Vslices {
+		year, _ := strconv.Atoi(file[0])
+		make := file[1]
+		model := file[2]
+		// in order to trim off the '-[imgview int].jpg' :
+		stockfile := file[3]
+		stockExt := filepath.Ext(stockfile)
+		stock := stockfile[0 : len(stockfile)-(len(stockExt)+2)]
+		vehicledb.DbInsert(year, make, model, stock)
+	}
+}
+
+// DbList queries the database to list all vehicles.
+func DbList() {
+	vehicledb.DbQueryAll()
+}
+
+// Add a new Vehicle to cached list
 func Add(newVehicle Vehicle) {
 	Vlist = append(Vlist, newVehicle)
 }
 
-// Retrieve a Vehicle by stocknumber.
+// Retrieve a (cached) Vehicle by stocknumber.
 // Example output:
 // {2003 Nissan Frontier 1}
 func Retrieve(s string) []Vehicle {
@@ -96,7 +119,7 @@ func Retrieve(s string) []Vehicle {
 	return resultSlice
 }
 
-// List returns complete vehicle list.
+// List returns complete (cached) vehicle list.
 func List() {
 	fmt.Println("Vehicle List:")
 	for _, vehicle := range Vlist {
