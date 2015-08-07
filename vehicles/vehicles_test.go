@@ -2,22 +2,42 @@ package vehicles_test
 
 import (
 	"fmt"
-
-	"leroi-training/vstruct"
+	"testing"
 )
 
-var v []vstruct.Vehicle
+type vehicle struct {
+	Year        int
+	Make        string
+	Model       string
+	Stocknumber int
+}
 
-func ExampleAdd() {
-	v1 := vstruct.Vehicle{Year: 2003, Make: "Toyota", Model: "Tacoma", Stocknumber: 1}
-	v2 := vstruct.Vehicle{Year: 2002, Make: "Toyota", Model: "Tacoma", Stocknumber: 2}
+var TestList = []vehicle{
+	vehicle{
+		Year:        2003,
+		Make:        "Nissan",
+		Model:       "Frontier",
+		Stocknumber: 1,
+	},
+	vehicle{
+		Year:        2002,
+		Make:        "Toyota",
+		Model:       "Tacoma",
+		Stocknumber: 2,
+	},
+}
 
-	v = append(v, v1)
-	fmt.Println(v)
+func TestAdd(t *testing.T) {
+	TestVehicle := vehicle{
+		Year:        1996,
+		Make:        "Honda",
+		Model:       "Passport",
+		Stocknumber: 3,
+	}
+	TestList = append(TestList, TestVehicle)
 
-	v = append(v, v2)
-	fmt.Println(v)
-	// Output:
-	// [{2003 Toyota Tacoma 1}]
-	// [{2003 Toyota Tacoma 1} {2002 Toyota Tacoma 2}]
+	fmt.Println("Vehicle List:")
+	for _, vehicle := range TestList {
+		fmt.Println(vehicle)
+	}
 }
