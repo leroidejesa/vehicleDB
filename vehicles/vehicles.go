@@ -128,11 +128,11 @@ func List() {
 
 // ListAsJson turns vList(type []Vehicle) into []byte so can
 // be used by HTTP handler (e.g. w.Write(vehicles.ListAsJson()))
-func ListAsJson() []byte {
+func ListAsJson() ([]byte, error) {
 	byte, err := json.Marshal(vList)
 	if err != nil {
 		log.Printf("ERROR: %v\n", err.Error)
 	}
 
-	return byte
+	return byte, err
 }
