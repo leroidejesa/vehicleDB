@@ -1,7 +1,9 @@
 package vehicles
 
 import (
+	"encoding/json"
 	"fmt"
+	"log"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -122,4 +124,15 @@ func List() {
 	for _, vehicle := range vList {
 		fmt.Println(vehicle)
 	}
+}
+
+// ListAsJson turns vList(type []Vehicle) into []byte so can
+// be used by HTTP handler (e.g. w.Write(vehicles.ListAsJson()))
+func ListAsJson() []byte {
+	byte, err := json.Marshal(vList)
+	if err != nil {
+		log.Printf("ERROR: %v\n", err.Error)
+	}
+
+	return byte
 }

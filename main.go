@@ -13,16 +13,11 @@ import (
 func vehiclesHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
-	byte, err := json.Marshal(vehicles.Vlist)
-
-	if err != nil {
-		return
-	}
-
 	log.Println("Full Vehicle List Retrieved.")
-	w.Write(byte)
+	w.Write(vehicles.ListAsJson())
 }
 
+// variable for mux
 var stockpath string
 
 func vehicleStock(w http.ResponseWriter, r *http.Request) {
@@ -37,6 +32,7 @@ func vehicleStock(w http.ResponseWriter, r *http.Request) {
 
 	log.Printf("Vehicle %s Successfully Retrieved.", stock)
 	w.Write(stockresult)
+
 	stockpath = stock
 }
 
