@@ -18,8 +18,8 @@ type Vehicle struct {
 	Stocknumber string `json:"stocknumber"`
 }
 
-// Vlist is the primary data cache
-var Vlist = []Vehicle{
+// vList is the primary data cache
+var vList = []Vehicle{
 	Vehicle{
 		Year:        2003,
 		Make:        "Nissan",
@@ -34,12 +34,12 @@ var Vlist = []Vehicle{
 	},
 }
 
-// Vslices holds pre-parsed slices of vehicle data
-var Vslices [][]string
+// vSlices holds pre-parsed slices of vehicle data
+var vSlices [][]string
 
-// push places photo files into a multidimensional slice (Vslices) for func parseAndCache()
+// push places photo files into a multidimensional slice (vSlices) for func parseAndCache()
 func push(p []string) {
-	Vslices = append(Vslices, p)
+	vSlices = append(vSlices, p)
 }
 
 // ImportPhotoData is an exported function that
@@ -65,7 +65,7 @@ func ImportPhotoData(root string) {
 
 // parseAndCache() organizes import results and adds vehicles to memory in proper format.
 func parseAndCache() {
-	for _, file := range Vslices {
+	for _, file := range vSlices {
 		year, _ := strconv.Atoi(file[0])
 		make := file[1]
 		model := file[2]
@@ -81,7 +81,7 @@ func parseAndCache() {
 
 // ImportToDb is the next (optional) step after ImportPhotoData() that loads parsed files into database.
 func ImportToDb() {
-	for _, file := range Vslices {
+	for _, file := range vSlices {
 		year, _ := strconv.Atoi(file[0])
 		make := file[1]
 		model := file[2]
@@ -100,29 +100,26 @@ func DbList() {
 
 // Add a new Vehicle to cached list
 func Add(newVehicle Vehicle) {
-	Vlist = append(Vlist, newVehicle)
+	vList = append(vList, newVehicle)
 }
 
 // Retrieve a (cached) Vehicle by stocknumber.
 // Example output:
-// {2003 Nissan Frontier 1}
-func Retrieve(s string) []Vehicle {
-	var result Vehicle
-	for _, vehicle := range Vlist {
-		if vehicle.Stocknumber == s {
-			result = vehicle
+// {2003 Nissan Frontier NF2301}
+func Retrieve(stockRequest string) []Vehicle {
+	for _, v := range vList {
+		if v.Stocknumber == stockRequest {
+			return []Vehicle{v}
 		}
 	}
 
-	var resultSlice []Vehicle
-	resultSlice = append(resultSlice, result)
-	return resultSlice
+	return nil
 }
 
 // List returns complete (cached) vehicle list.
 func List() {
 	fmt.Println("Vehicle List:")
-	for _, vehicle := range Vlist {
+	for _, vehicle := range vList {
 		fmt.Println(vehicle)
 	}
 }
