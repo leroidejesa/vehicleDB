@@ -24,7 +24,7 @@ func vehiclesHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	log.Println("Full Vehicle List Retrieved.")
+	log.Println("Response sent.")
 	w.Write(byte)
 }
 
