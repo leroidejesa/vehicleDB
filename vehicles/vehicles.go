@@ -20,21 +20,11 @@ type Vehicle struct {
 	Stocknumber string `json:"stocknumber"`
 }
 
+// ImagePaths is a map of stocknumbers to image filepaths
+var ImagePaths = make(map[string][]string)
+
 // vList is the primary data cache (starts with a couple dummy vehicles)
-var vList = []Vehicle{
-	Vehicle{
-		Year:        2003,
-		Make:        "Nissan",
-		Model:       "Frontier",
-		Stocknumber: "test",
-	},
-	Vehicle{
-		Year:        2002,
-		Make:        "Toyota",
-		Model:       "Tacoma",
-		Stocknumber: "test",
-	},
-}
+var vList = make([]Vehicle, 0)
 
 // these temporarily hold vehicle data during ImportPhotoData()
 var tempVehicle Vehicle
@@ -42,6 +32,7 @@ var tempYear int
 var tempMake string
 var tempModel string
 var tempStock string
+var tempImg string
 
 // ImportPhotoData retrieves files from a given directory.
 func ImportPhotoData(root string) {
@@ -60,8 +51,11 @@ func ImportPhotoData(root string) {
 		stockExt := filepath.Ext(stockfile)
 		tempStock = stockfile[0 : len(stockfile)-(len(stockExt)+2)]
 		tempVehicle = Vehicle{Year: tempYear, Make: tempMake, Model: tempModel, Stocknumber: tempStock}
+
+		ImagePaths[tempStock] = append(ImagePaths[tempStock], path)
 		Add(tempVehicle)
 		numImported++
+
 		return nil
 	}
 
@@ -77,12 +71,16 @@ func ImportToDb() {
 		md := item.Model
 		st := item.Stocknumber
 		vehicledb.DbInsert(yr, mk, md, st)
+		for _, p := range ImagePaths[st] {
+			vehicledb.DbPhotoInsert(st, p)
+		}
 	}
 }
 
 // DbList queries the database to list all vehicles.
 func DbList() {
 	vehicledb.DbQueryAll()
+	vehicledb.DbQueryPhotos()
 }
 
 // used to search/filter slices for a given string (e.g. stocknumber)

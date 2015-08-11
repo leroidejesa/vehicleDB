@@ -49,6 +49,7 @@ func vehicleStock(w http.ResponseWriter, r *http.Request) {
 func main() {
 	vehicles.ImportPhotoData("$HOME/Documents/exercise/photos/")
 	vehicles.ImportToDb()
+	vehicles.DbList()
 
 	r := mux.NewRouter()
 	r.HandleFunc("/", vehiclesHandler)

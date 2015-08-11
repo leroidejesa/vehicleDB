@@ -21,6 +21,8 @@ var make string
 var model string
 var stocknumber string
 
+var lastInsertStocknum int
+
 // DbInsert loads pre-parsed (see pkg "leroi-training/vehicles") data into postgresql database
 func DbInsert(y int, mk string, md string, st string) {
 	dbinfo := fmt.Sprintf("user=%s password=%s dbname=%s sslmode=disable",
@@ -32,8 +34,23 @@ func DbInsert(y int, mk string, md string, st string) {
 	}
 	// defer db.Close()
 
-	var lastInsertStocknum int
 	err = db.QueryRow("INSERT INTO vehicleinfo(year,make,model,stocknumber) VALUES($1,$2,$3,$4) returning id;", y, mk, md, st).Scan(&lastInsertStocknum)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+// DbPhotoInsert loads image filepaths into database
+func DbPhotoInsert(stock string, p string) {
+	dbinfo := fmt.Sprintf("user=%s password=%s dbname=%s sslmode=disable",
+		dbUser, dbPassword, dbName)
+
+	db, err := sql.Open("postgres", dbinfo)
+	if err != nil {
+		log.Fatal(err)
+	}
+	var lastInsertPhoto int
+	err = db.QueryRow("INSERT INTO vehiclephotos(stocknumber,path) VALUES($1,$2) returning id;", stock, p).Scan(&lastInsertPhoto)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -63,5 +80,30 @@ func DbQueryAll() {
 			log.Fatal(err)
 		}
 		fmt.Println(year, make, model, stocknumber)
+	}
+}
+
+// DbQueryPhotos lists out all the photo paths in the database
+func DbQueryPhotos() {
+	dbinfo := fmt.Sprintf("user=%s password=%s dbname=%s sslmode=disable",
+		dbUser, dbPassword, dbName)
+
+	db, err := sql.Open("postgres", dbinfo)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println("# Photo Query")
+	rows, err := db.Query("SELECT * FROM vehiclephotos")
+
+	for rows.Next() {
+		var id int
+		var stocknumber string
+		var filepath string
+		err = rows.Scan(&id, &stocknumber, &filepath)
+		if err != nil {
+			log.Fatal(err)
+		}
+		fmt.Println(id, stocknumber, filepath)
 	}
 }

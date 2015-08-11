@@ -1,3 +1,9 @@
 # use in psql
 
 CREATE TABLE vehicleinfo (id serial PRIMARY KEY, year int, make varchar, model varchar, stocknumber varchar);
+
+CREATE TABLE vehiclephotos (id serial PRIMARY KEY, stocknumber varchar, path varchar);
+
+GRANT ALL PRIVILEGES ON TABLE vehiclephotos TO dealerpeak;
+
+GRANT ALL PRIVILEGES ON TABLE vehiclephotos_id_seq TO dealerpeak;
