@@ -12,12 +12,23 @@
   <div class="container" ng-controller="VehiclesCtrl">
     <div class="row">
       <div class="col-md-12">
-        <h2>Vehicle List</h2>
-        <ul>
-          <li ng-repeat="item in vehicles">
-            {{item.year}}-{{item.make}}-{{item.model}}
-          </li>
-        </ul>
+        <form class="form-inline" role="form">
+          <div class="form-group">
+            <input ng-model="query" type="text" class="form-control" placeholder="Search">
+          </div>
+        </form>
+        <div class="row">
+          <div class="col-md-12">
+            <h2>Vehicle List</h2>
+          </div>
+          <div class="col-md-12">
+            <ul>
+              <li ng-repeat="item in vehicles | filter:query">
+                {{item.year}} {{item.make}} {{item.model}} ({{item.stocknumber}})
+              </li>
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
   </div>

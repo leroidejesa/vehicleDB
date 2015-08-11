@@ -1,0 +1,3 @@
+# use in psql
+
+CREATE TABLE vehicleinfo (id serial PRIMARY KEY, year int, make varchar, model varchar, stocknumber varchar);
