@@ -14,14 +14,15 @@ import (
 
 // Vehicle is a struct which will help us organize basic vehicle data
 type Vehicle struct {
-	Year        int    `json:"year"`
-	Make        string `json:"make"`
-	Model       string `json:"model"`
-	Stocknumber string `json:"stocknumber"`
+	Year        int                 `json:"year"`
+	Make        string              `json:"make"`
+	Model       string              `json:"model"`
+	Stocknumber string              `json:"stocknumber"`
+	Images      map[string][]string `json:"images"`
 }
 
 // ImagePaths is a map of stocknumbers to image filepaths
-var ImagePaths = make(map[string][]string)
+// var ImagePaths = make(map[string][]string)
 
 // vList is the primary data cache (starts with a couple dummy vehicles)
 var vList = make([]Vehicle, 0)
@@ -33,6 +34,7 @@ var tempMake string
 var tempModel string
 var tempStock string
 var tempImg string
+var tempPath string
 
 // ImportPhotoData retrieves files from a given directory.
 func ImportPhotoData(root string) {
@@ -50,9 +52,11 @@ func ImportPhotoData(root string) {
 		stockfile := pathinfo[3]
 		stockExt := filepath.Ext(stockfile)
 		tempStock = stockfile[0 : len(stockfile)-(len(stockExt)+2)]
-		tempVehicle = Vehicle{Year: tempYear, Make: tempMake, Model: tempModel, Stocknumber: tempStock}
+		tempMap := make(map[string][]string)
+		tempPath = path
+		tempVehicle = Vehicle{Year: tempYear, Make: tempMake, Model: tempModel, Stocknumber: tempStock, Images: tempMap}
+		tempVehicle.Images[tempStock] = append(tempVehicle.Images[tempStock], path)
 
-		ImagePaths[tempStock] = append(ImagePaths[tempStock], path)
 		Add(tempVehicle)
 		numImported++
 
@@ -64,18 +68,18 @@ func ImportPhotoData(root string) {
 }
 
 // ImportToDb is the next (optional) step after ImportPhotoData() that loads parsed files into database.
-func ImportToDb() {
-	for _, item := range vList {
-		yr := item.Year
-		mk := item.Make
-		md := item.Model
-		st := item.Stocknumber
-		vehicledb.DbInsert(yr, mk, md, st)
-		for _, p := range ImagePaths[st] {
-			vehicledb.DbPhotoInsert(st, p)
-		}
-	}
-}
+// func ImportToDb() {
+// 	for _, item := range vList {
+// 		yr := item.Year
+// 		mk := item.Make
+// 		md := item.Model
+// 		st := item.Stocknumber
+// 		vehicledb.DbInsert(yr, mk, md, st)
+// 		for _, p := range ImagePaths[st] {
+// 			vehicledb.DbPhotoInsert(st, p)
+// 		}
+// 	}
+// }
 
 // DbList queries the database to list all vehicles.
 func DbList() {
@@ -98,6 +102,12 @@ func Add(newVehicle Vehicle) {
 	if !contains(vList, newVehicle.Stocknumber) {
 		vList = append(vList, newVehicle)
 		fmt.Println("Vehicle Added!")
+	} else {
+		for _, item := range vList {
+			if item.Stocknumber == newVehicle.Stocknumber {
+				item.Images[newVehicle.Stocknumber] = append(item.Images[newVehicle.Stocknumber], tempPath)
+			}
+		}
 	}
 }
 

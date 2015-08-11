@@ -20,6 +20,8 @@ func vehiclesHandler(w http.ResponseWriter, r *http.Request) {
 	byte, err := vehicles.ListAsJson()
 	if err != nil {
 		log.Printf("ERROR: %v\n", err.Error)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
 	}
 
 	log.Println("Full Vehicle List Retrieved.")
@@ -37,6 +39,7 @@ func vehicleStock(w http.ResponseWriter, r *http.Request) {
 	stockresult, err := json.Marshal(vehicles.Retrieve(stock))
 
 	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
@@ -48,8 +51,9 @@ func vehicleStock(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	vehicles.ImportPhotoData("$HOME/Documents/exercise/photos/")
-	vehicles.ImportToDb()
+	// vehicles.ImportToDb()
 	vehicles.DbList()
+	vehicles.List()
 
 	r := mux.NewRouter()
 	r.HandleFunc("/", vehiclesHandler)

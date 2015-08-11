@@ -24,7 +24,10 @@
           <div class="col-md-12">
             <ul>
               <li ng-repeat="item in vehicles | filter:query">
-                {{item.year}} {{item.make}} {{item.model}} ({{item.stocknumber}})
+                <div>{{item.year}} {{item.make}} {{item.model}} ({{item.stocknumber}})</div>
+                <ul>
+                  <li ng-repeat="imageUrl in item.images[item.stocknumber]"><img src="{{imageUrl}}" /></li>
+                </ul>
               </li>
             </ul>
           </div>

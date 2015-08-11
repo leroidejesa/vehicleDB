@@ -7,3 +7,7 @@ CREATE TABLE vehiclephotos (id serial PRIMARY KEY, stocknumber varchar, path var
 GRANT ALL PRIVILEGES ON TABLE vehiclephotos TO dealerpeak;
 
 GRANT ALL PRIVILEGES ON TABLE vehiclephotos_id_seq TO dealerpeak;
+
+GRANT ALL PRIVILEGES ON TABLE vehicleinfo TO dealerpeak;
+
+GRANT ALL PRIVILEGES ON TABLE vehicleinfo_id_seq TO dealerpeak;
