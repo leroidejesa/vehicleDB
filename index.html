@@ -2,22 +2,22 @@
 <html ng-app="trainingVehicles">
 <head>
   <title>Leroi-Training</title>
+  <!-- angular -->
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular-route.js"></script>
   <script src="app.js"></script>
   <script src="js/VehiclesController.js"></script>
-
+  <!-- bootstrap & jquery -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+  <!-- styles -->
+  <link rel="stylesheet" href="css/main.css">
   <!-- fancybox -->
   <link rel="stylesheet" href="/fancybox/source/jquery.fancybox.css?v=2.1.5" type="text/css" media="screen" />
   <script type="text/javascript" src="/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
 
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-
-  <link rel="stylesheet" href="css/main.css">
 </head>
 <body ng-controller="VehiclesCtrl">
-
 
 <script type="text/javascript">
   $(document).ready(function() {
@@ -25,9 +25,9 @@
   });
 </script>
 
-
   <div id="main">
     <div ng-view></div>
   </div>
+
 </body>
 </html>

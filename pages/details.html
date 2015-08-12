@@ -1,0 +1,33 @@
+<h2>Vehicle Details</h2>
+<a href="#/vehicles/"><< Back To List</a>
+<table border="1" cellpadding="2" cellspacing="0">
+  <thead>
+    <tr>
+      <th><strong>Details</strong></th>
+      <th><strong>Photos</strong></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <!-- unfortunately my choice early-on to cache vehicles in a slice instead of a map results
+      in me having to loop through it for specific queries (as opposed to calling values by their key).
+      definitely a newb decision i'll know to avoid next time! -->
+      <td valign="top" ng-repeat="item in vehicles | filter:stocknumber">
+        <p><strong>Year:</strong> {{item.year}}</p>
+        <p><strong>Make:</strong> {{item.make}}</p>
+        <p><strong>Model:</strong> {{item.model}}</p>
+        <p><strong>StockNumber:</strong> {{item.stocknumber}}</p>
+      </td>
+      <td ng-repeat="item in vehicles | filter:stocknumber" width="400">
+        <!-- large default image -->
+        <div ng-class="item.images[stocknumber][0]">
+          <img width="400" ng-if="item.images[stocknumber][0]" ng-src={{item.images[stocknumber][0]}}/>
+        </div>
+        <!-- tiled images -->
+        <div ng-repeat="i in item.images[item.stocknumber]" style="float:left;padding:5px;">
+          <a class="fancybox" href={{i}}><img width="90" ng-if="i" ng-src={{i}}/></a>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>
