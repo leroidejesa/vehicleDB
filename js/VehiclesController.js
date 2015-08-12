@@ -7,7 +7,7 @@ trainingVehicles.config(['$routeProvider', function($routeProvider) {
     }).
 
     when('/2003F1', {
-        templateUrl : 'pages//2003F1.html',
+        templateUrl : 'pages/2003F1.html',
         controller  : 'VehiclesCtrl'
     }).
 
@@ -48,6 +48,8 @@ trainingVehicles.config(['$routeProvider', function($routeProvider) {
 }]);
 
 trainingVehicles.controller('VehiclesCtrl', function VehiclesCtrl($scope, $http) {
+  // // var pageId = $location.path().split("/")[1]||"Unknown";
+  // console.log(pageId);
   $http.get('http://127.0.0.1:8080/api/vehicles/').then(function(resp) {
     console.log('Success', resp);
     // For JSON responses, resp.data contains the result

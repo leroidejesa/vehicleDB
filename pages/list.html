@@ -11,7 +11,7 @@
           <h2>Vehicle List</h2>
         </div>
         <div class="col-md-4">
-          <table class="table table-bordered">
+        <table border="1" cellpadding="2" cellspacing="0">
             <thead>
               <tr>
                 <th>Year</th>
@@ -25,7 +25,7 @@
                 <td>{{item.year}}</td>
                 <td>{{item.make}}</td>
                 <td>{{item.model}}</td>
-                <td><a href="http://127.0.0.1:8080/api/vehicles/{{item.stocknumber}}">{{item.stocknumber}}</a></td>
+                <td><a href="http://127.0.0.1:8080/#/{{item.stocknumber}}">{{item.stocknumber}}</a></td>
               </tr>
             </tbody>
           </table>
