@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 
@@ -56,11 +57,12 @@ func main() {
 	vehicles.List()
 
 	r := mux.NewRouter()
-	r.HandleFunc("/", vehiclesHandler)
-	r.HandleFunc("/{stockpath}", vehicleStock)
-	http.Handle("/", r)
+	r.HandleFunc("/api/vehicles/", vehiclesHandler)
+	r.HandleFunc("/api/vehicles/{stockpath}", vehicleStock)
+	// http.Handle("/api/vehicles/", r)
 
-	http.Handle("/{stockpath}", r)
-	log.Println("Now serving on http://127.0.0.1:8080/")
-	http.ListenAndServe(":8080", nil)
+	r.PathPrefix("/").Handler(http.FileServer(http.Dir("/home/leroi/dpnext/go/src/leroi-training/")))
+	// log.Println("Now serving on http://127.0.0.1:8080/")
+	fmt.Println(http.ListenAndServe(":8080", r))
+
 }

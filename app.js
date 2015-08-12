@@ -1,1 +1,1 @@
-var trainingVehicles = angular.module('trainingVehicles', []);
+var trainingVehicles = angular.module('trainingVehicles', ['ngRoute']);
