@@ -2,70 +2,64 @@ package vehicledb
 
 import (
 	"database/sql"
+	"errors"
 	"fmt"
 	"log"
-	// go-plus is chastising me here for inserting
-	// a blank import in a non-main or test package.
-	// is there any important reason why?
+	"sync"
+
 	_ "github.com/lib/pq"
 )
 
-const (
-	dbUser     = "dealerpeak"
-	dbPassword = "go@dmin"
-	dbName     = "leroi"
+var (
+	db     *sql.DB
+	dbLock sync.Mutex
 )
 
-var year int
-var make string
-var model string
-var stocknumber string
+func getDbConnection() (*sql.DB, error) {
+	dbLock.Lock()
+	defer dbLock.Unlock()
 
-var lastInsertStocknum int
+	if db != nil {
+		return db, nil
+	}
+	connPool, err := sql.Open("postgres", "user=dealerpeak password=go@dmin dbname=leroi sslmode=disable")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	db = connPool
+
+	return db, nil
+}
 
 // DbInsert loads pre-parsed (see pkg "leroi-training/vehicles") data into postgresql database
-func DbInsert(y int, mk string, md string, st string) {
-	dbinfo := fmt.Sprintf("user=%s password=%s dbname=%s sslmode=disable",
-		dbUser, dbPassword, dbName)
-
-	db, err := sql.Open("postgres", dbinfo)
+func DbInsert(y int, mk string, md string, st string) (err error) {
+	db, err := getDbConnection()
+	if err != nil {
+		return errors.New("Something went wrong:" + err.Error())
+	}
+	_, err = db.Exec("INSERT INTO vehicleinfo(year,make,model,stocknumber) VALUES($1,$2,$3,$4);", y, mk, md, st)
 	if err != nil {
 		log.Fatal(err)
 	}
-	// defer db.Close()
-
-	err = db.QueryRow("INSERT INTO vehicleinfo(year,make,model,stocknumber) VALUES($1,$2,$3,$4) returning id;", y, mk, md, st).Scan(&lastInsertStocknum)
-	if err != nil {
-		log.Fatal(err)
-	}
+	return nil
 }
 
 // DbPhotoInsert loads image filepaths into database
-func DbPhotoInsert(stock string, p string) {
-	dbinfo := fmt.Sprintf("user=%s password=%s dbname=%s sslmode=disable",
-		dbUser, dbPassword, dbName)
-
-	db, err := sql.Open("postgres", dbinfo)
+func DbPhotoInsert(stock string, p string) (err error) {
+	db, err := getDbConnection()
+	if err != nil {
+		return errors.New("Something went wrong:" + err.Error())
+	}
+	_, err = db.Exec("INSERT INTO vehiclephotos(stocknumber,path) VALUES($1,$2);", stock, p)
 	if err != nil {
 		log.Fatal(err)
 	}
-	var lastInsertPhoto int
-	err = db.QueryRow("INSERT INTO vehiclephotos(stocknumber,path) VALUES($1,$2) returning id;", stock, p).Scan(&lastInsertPhoto)
-	if err != nil {
-		log.Fatal(err)
-	}
+	return nil
 }
 
 // DbQueryAll lists out all the vehicles in the database
 func DbQueryAll() {
-	dbinfo := fmt.Sprintf("user=%s password=%s dbname=%s sslmode=disable",
-		dbUser, dbPassword, dbName)
-
-	db, err := sql.Open("postgres", dbinfo)
-	if err != nil {
-		log.Fatal(err)
-	}
-
 	fmt.Println("# Query")
 	rows, err := db.Query("SELECT * FROM vehicleinfo")
 
@@ -85,14 +79,6 @@ func DbQueryAll() {
 
 // DbQueryPhotos lists out all the photo paths in the database
 func DbQueryPhotos() {
-	dbinfo := fmt.Sprintf("user=%s password=%s dbname=%s sslmode=disable",
-		dbUser, dbPassword, dbName)
-
-	db, err := sql.Open("postgres", dbinfo)
-	if err != nil {
-		log.Fatal(err)
-	}
-
 	fmt.Println("# Photo Query")
 	rows, err := db.Query("SELECT * FROM vehiclephotos")
 

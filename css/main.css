@@ -1,1 +1,25 @@
-/*coming soon*/
+.tbl {
+    background-color: white;
+}
+
+.tbl-detail {
+  max-width: 70%;
+  background-color: white;
+}
+
+.tiles {
+  float:left;
+  padding-left:10px;
+  padding-top:10px;
+}
+
+.tileset {
+  padding-left:5px;
+  padding-bottom:15px;
+  padding-top:5px;
+}
+
+body {
+  background: url("/gotraining.png") no-repeat right bottom fixed;
+  background-size: 480px;
+}

@@ -14,8 +14,8 @@ trainingVehicles.config(['$routeProvider', function($routeProvider) {
 
 trainingVehicles.controller('VehiclesCtrl', ['$scope', '$http', '$routeParams', function VehiclesCtrl($scope, $http, $routeParams) {
   $scope.stocknumber = $routeParams.stocknumber;
-  
-  $http.get('http://127.0.0.1:8080/api/vehicles/').then(function(resp) {
+
+  $http.get('/api/vehicles/').then(function(resp) {
     console.log('Success', resp);
     // For JSON responses, resp.data contains the result
     $scope.vehicles = resp.data;
